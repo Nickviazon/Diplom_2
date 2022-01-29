@@ -14,7 +14,7 @@ public class ProfileDirector {
         randomDataForProfile = Stream
                 .generate(() -> RandomStringUtils.randomAlphabetic(10))
                 .limit(3).collect(Collectors.toList());
-        profileBuilder.setEmail(randomDataForProfile.get(0));
+        profileBuilder.setEmail(randomDataForProfile.get(0)+"@testemail.ru");
         profileBuilder.setPassword(randomDataForProfile.get(1));
         profileBuilder.setName(randomDataForProfile.get(2));
     }
