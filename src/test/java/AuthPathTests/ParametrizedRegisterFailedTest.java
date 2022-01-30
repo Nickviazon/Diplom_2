@@ -1,6 +1,6 @@
 package AuthPathTests;
 
-import Profile.*;
+import profile.*;
 import clients.AuthClient;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
@@ -8,13 +8,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import static Profile.ProfileType.*;
+import static profile.ProfileType.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.runners.Parameterized.*;
 
 @RunWith(Parameterized.class)
-public class ParametrizedRegisterFailedTest {
+public class ParametrizedRegisterFailedTest extends AuthTest {
 
     @Parameter
     public ProfileType profileType;
@@ -39,9 +39,6 @@ public class ParametrizedRegisterFailedTest {
 
     @Test
     public void registerProfileWithoutFieldReturns403WithMessage() {
-        AuthClient authClient = new AuthClient();
-        ProfileDirector profileDirector = new ProfileDirector();
-        ProfileBuilder profileBuilder = new ProfileBuilder();
         profileDirector.buildProfile(profileBuilder, profileType);
         Profile profile = profileBuilder.getResult();
 
