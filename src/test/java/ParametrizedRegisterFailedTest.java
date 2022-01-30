@@ -7,8 +7,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import static Profile.ProfileType.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.runners.Parameterized.*;
-import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
 public class ParametrizedRegisterFailedTest {
@@ -44,10 +45,7 @@ public class ParametrizedRegisterFailedTest {
 
         Response registerResponse = authClient.registerProfileResponse(profile);
         ValidatableResponse validatableResponse = registerResponse.then().assertThat().statusCode(expectedResponseCode);
-        Boolean actualSuccessField = validatableResponse.extract().path("success");
-        String actualMessage = validatableResponse.extract().path("message");
-
-        assertEquals(expectedSuccessField, actualSuccessField);
-        assertEquals(expectedMessage, actualMessage);
+        validatableResponse.body("success", is(false));
+        validatableResponse.body("message", is(equalTo(expectedMessage)));
     }
 }

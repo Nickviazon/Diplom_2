@@ -8,11 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 import Profile.ProfileType;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.blankOrNullString;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.*;
 
 public class AuthTest {
 
@@ -34,13 +33,11 @@ public class AuthTest {
 
         Response registerResponse = authClient.registerProfileResponse(profile);
         ValidatableResponse validatableResponse = registerResponse.then().assertThat().statusCode(200);
-        boolean isResponseSuccessful = validatableResponse.extract().path("success");
-        String actualAuthToken = validatableResponse.extract().path("accessToken");
-        String actualRefreshToken = validatableResponse.extract().path("refreshToken");
-
-        assertTrue(isResponseSuccessful);
-        assertThat("Auth token is null or blank string", actualAuthToken, is(not(blankOrNullString())));
-        assertThat("Refresh token is null or blank string", actualRefreshToken, is(not(blankOrNullString())));
+        validatableResponse.body("success", is(true));
+        validatableResponse.body("accessToken", is(not(blankOrNullString())));
+        validatableResponse.body("refreshToken", is(not(blankOrNullString())));
+        validatableResponse.body("user.email", is(equalTo(profile.email.toLowerCase())));
+        validatableResponse.body("user.name", is(equalTo(profile.name)));
     }
 
     @Test
@@ -56,11 +53,8 @@ public class AuthTest {
         registerResponse = authClient.registerProfileResponse(secondProfile);
 
         ValidatableResponse validatableResponse = registerResponse.then().assertThat().statusCode(403);
-        boolean isResponseSuccessful = validatableResponse.extract().path("success");
-        String actualMessage = validatableResponse.extract().path("message");
-
-        assertFalse(isResponseSuccessful);
-        assertEquals(expectedMessage, actualMessage);
+        validatableResponse.body("success", is(false));
+        validatableResponse.body("message", is(equalTo(expectedMessage)));
     }
 
 }
