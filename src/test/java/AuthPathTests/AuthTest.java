@@ -3,16 +3,16 @@ package AuthPathTests;
 import Profile.ProfileBuilder;
 import Profile.ProfileDirector;
 import clients.AuthClient;
-import org.junit.Before;
+import org.junit.BeforeClass;
 
 public abstract class AuthTest {
 
-    protected AuthClient authClient;
-    protected ProfileDirector profileDirector;
-    protected ProfileBuilder profileBuilder;
+    protected static AuthClient authClient;
+    protected static ProfileDirector profileDirector;
+    protected static ProfileBuilder profileBuilder;
 
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public static void setUpClientAndBuilders() {
         authClient = new AuthClient();
         profileDirector = new ProfileDirector();
         profileBuilder = new ProfileBuilder();
