@@ -20,4 +20,13 @@ public class AuthClient extends RestAssuredClient{
         String requestPath = AUTH_PATH + "register";
         return getResponse(specification, requestType, requestPath, profile);
     }
+
+    public Response loginProfileResponse(Profile profile) {
+        RequestSpecification specification = getBaseSpec();
+        Method requestType = Method.POST;
+        String requestPath = AUTH_PATH + "login";
+        return getResponse(specification, requestType, requestPath, profile);
+    }
+
+    
 }
