@@ -13,7 +13,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.blankOrNullString;
 import static org.hamcrest.Matchers.not;
 
-public class AuthTest {
+public class RegisterTest {
 
     private AuthClient authClient;
     private ProfileDirector profileDirector;
