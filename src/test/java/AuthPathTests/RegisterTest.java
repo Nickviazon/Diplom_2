@@ -1,10 +1,8 @@
-import clients.AuthClient;
+package AuthPathTests;
+
 import Profile.Profile;
-import Profile.ProfileBuilder;
-import Profile.ProfileDirector;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
-import org.junit.Before;
 import org.junit.Test;
 import Profile.ProfileType;
 
@@ -13,18 +11,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.blankOrNullString;
 import static org.hamcrest.Matchers.not;
 
-public class RegisterTest {
-
-    private AuthClient authClient;
-    private ProfileDirector profileDirector;
-    private ProfileBuilder profileBuilder;
-
-    @Before
-    public void setUp() {
-        authClient = new AuthClient();
-        profileDirector = new ProfileDirector();
-        profileBuilder = new ProfileBuilder();
-    }
+public class RegisterTest extends AuthTest {
 
     @Test
     public void registerNewProfileReturns200WithAccessAndRefreshTokens() {

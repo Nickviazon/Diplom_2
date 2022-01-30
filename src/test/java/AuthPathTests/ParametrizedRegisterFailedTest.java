@@ -1,3 +1,5 @@
+package AuthPathTests;
+
 import Profile.*;
 import clients.AuthClient;
 import io.restassured.response.Response;
