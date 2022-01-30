@@ -47,7 +47,7 @@ public class ParametrizedRegisterFailedTest {
 
         Response registerResponse = authClient.registerProfileResponse(profile);
         ValidatableResponse validatableResponse = registerResponse.then().assertThat().statusCode(expectedResponseCode);
-        validatableResponse.body("success", is(false));
-        validatableResponse.body("message", is(equalTo(expectedMessage)));
+        validatableResponse.assertThat().body("success", is(false));
+        validatableResponse.assertThat().body("message", is(equalTo(expectedMessage)));
     }
 }
