@@ -1,7 +1,7 @@
 package AuthPathTests;
 
-import Profile.ProfileBuilder;
-import Profile.ProfileDirector;
+import profile.ProfileBuilder;
+import profile.ProfileDirector;
 import clients.AuthClient;
 import org.junit.BeforeClass;
 

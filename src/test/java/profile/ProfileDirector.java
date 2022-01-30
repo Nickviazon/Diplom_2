@@ -1,11 +1,10 @@
-package Profile;
+package profile;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import Profile.ProfileType;
 
 public class ProfileDirector {
 

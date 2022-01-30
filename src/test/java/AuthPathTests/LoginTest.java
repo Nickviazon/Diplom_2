@@ -1,7 +1,7 @@
 package AuthPathTests;
 
-import Profile.Profile;
-import Profile.ProfileType;
+import profile.Profile;
+import profile.ProfileType;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import org.junit.Before;
@@ -20,8 +20,7 @@ public class LoginTest extends AuthTest {
     public void setUp() {
         // Создаём данные для профиля
         profileDirector.buildProfile(profileBuilder, ProfileType.FULL);
-        Profile profile = profileBuilder.getResult();
-
+        profile = profileBuilder.getResult();
     }
 
     @Test

@@ -1,4 +1,4 @@
-package Profile;
+package profile;
 
 public class ProfileBuilder implements Builder {
     private String email;

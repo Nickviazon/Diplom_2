@@ -1,10 +1,10 @@
 package AuthPathTests;
 
-import Profile.Profile;
+import profile.Profile;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import org.junit.Test;
-import Profile.ProfileType;
+import profile.ProfileType;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.blankOrNullString;

@@ -1,4 +1,4 @@
-package Profile;
+package profile;
 
 public interface Builder {
     void setEmail(String email);
