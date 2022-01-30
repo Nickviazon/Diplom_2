@@ -6,8 +6,7 @@ import io.restassured.response.ValidatableResponse;
 import org.junit.Test;
 import Profile.ProfileType;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.blankOrNullString;
 import static org.hamcrest.Matchers.not;
 
@@ -21,7 +20,7 @@ public class RegisterTest extends AuthTest {
         Response registerResponse = authClient.registerProfileResponse(profile);
         ValidatableResponse validatableResponse = registerResponse.then().assertThat().statusCode(200);
         validatableResponse.assertThat().body("success", is(true));
-        validatableResponse.assertThat().body("accessToken", is(not(blankOrNullString())));
+        validatableResponse.assertThat().body("accessToken", both(is(not(blankOrNullString()))).and(startsWith("Bearer ")));
         validatableResponse.assertThat().body("refreshToken", is(not(blankOrNullString())));
         validatableResponse.assertThat().body("user.email", is(equalTo(profile.email.toLowerCase())));
         validatableResponse.assertThat().body("user.name", is(equalTo(profile.name)));
