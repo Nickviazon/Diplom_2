@@ -1,29 +1,24 @@
 package profile;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProfileCredentials {
     public final String email;
     public final String password;
     public final String name;
-    private final String accessToken;
-    private final String refreshToken;
 
-    public ProfileCredentials(Profile profile, String accessToken, String refreshToken) {
+    public ProfileCredentials(Profile profile) {
         this.email = profile.email;
         this.password = profile.password;
-        this.name = profile.password;
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
+        this.name = profile.name;
     }
 
-    public static ProfileCredentials from (Profile profile, String accessToken, String refreshToken) {
-        return new ProfileCredentials(profile, accessToken, refreshToken);
+    public static ProfileCredentials from(Profile profile) {
+        return new ProfileCredentials(profile);
     }
 
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public String getRefreshTokenToken() {
-        return refreshToken;
+    public Profile toProfile() {
+        return new Profile(email, password, name);
     }
 }

@@ -24,10 +24,13 @@ public class AuthClient extends RestAssuredClient{
         return getResponse(specification, requestType, requestPath, profile);
     }
 
-    public Response updateProfileResponse(ProfileCredentials profileCredentials) {
+    public Response updateProfileResponse(ProfileCredentials profileCredentials, String accessToken) {
         RequestSpecification specification = getBaseSpec();
-        Method requestType = Method.PUT;
+        Method requestType = Method.PATCH;
         String requestPath = AUTH_PATH + "user";
+        if (accessToken != null) {
+            specification.given().header("Authorization", accessToken);
+        }
         return getResponse(specification, requestType, requestPath, profileCredentials);
     }
 }

@@ -3,6 +3,7 @@ package profile;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -14,7 +15,7 @@ public class ProfileDirector {
         randomDataForProfile = Stream
                 .generate(() -> RandomStringUtils.randomAlphabetic(10))
                 .limit(3).collect(Collectors.toList());
-        profileBuilder.setEmail(randomDataForProfile.get(0)+"@testemail.ru");
+        profileBuilder.setEmail(randomDataForProfile.get(0).toLowerCase()+"@testemail.ru");
         profileBuilder.setPassword(randomDataForProfile.get(1));
         profileBuilder.setName(randomDataForProfile.get(2));
     }
@@ -33,7 +34,7 @@ public class ProfileDirector {
                 .generate(() -> RandomStringUtils.randomAlphabetic(10))
                 .limit(2).collect(Collectors.toList());
 
-        profileBuilder.setEmail(randomDataForProfile.get(0));
+        profileBuilder.setEmail(randomDataForProfile.get(0).toLowerCase()+"@testemail.ru");
         profileBuilder.setPassword(null);
         profileBuilder.setName(randomDataForProfile.get(1));
     }
@@ -42,7 +43,7 @@ public class ProfileDirector {
         randomDataForProfile = Stream
                 .generate(() -> RandomStringUtils.randomAlphabetic(10))
                 .limit(2).collect(Collectors.toList());
-        profileBuilder.setEmail(randomDataForProfile.get(0));
+        profileBuilder.setEmail(randomDataForProfile.get(0).toLowerCase()+"@testemail.ru");
         profileBuilder.setPassword(randomDataForProfile.get(1));
         profileBuilder.setName(null);
     }
