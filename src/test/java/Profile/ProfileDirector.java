@@ -5,12 +5,13 @@ import org.apache.commons.lang3.RandomStringUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import Profile.ProfileType;
 
 public class ProfileDirector {
 
     private List<String> randomDataForProfile;
 
-    public void buildFullProfile(Builder profileBuilder) {
+    private void buildFullProfile(Builder profileBuilder) {
         randomDataForProfile = Stream
                 .generate(() -> RandomStringUtils.randomAlphabetic(10))
                 .limit(3).collect(Collectors.toList());
@@ -19,7 +20,7 @@ public class ProfileDirector {
         profileBuilder.setName(randomDataForProfile.get(2));
     }
 
-    public void buildProfileWithoutEmail(Builder profileBuilder) {
+    private void buildProfileWithoutEmail(Builder profileBuilder) {
        randomDataForProfile = Stream
                 .generate(() -> RandomStringUtils.randomAlphabetic(10))
                 .limit(2).collect(Collectors.toList());
@@ -28,7 +29,7 @@ public class ProfileDirector {
         profileBuilder.setName(randomDataForProfile.get(1));
     }
 
-    public void buildProfileWithoutPassword(Builder profileBuilder) {
+    private void buildProfileWithoutPassword(Builder profileBuilder) {
         randomDataForProfile = Stream
                 .generate(() -> RandomStringUtils.randomAlphabetic(10))
                 .limit(2).collect(Collectors.toList());
@@ -38,12 +39,31 @@ public class ProfileDirector {
         profileBuilder.setName(randomDataForProfile.get(1));
     }
 
-    public void buildProfileWithoutName(Builder profileBuilder) {
+    private void buildProfileWithoutName(Builder profileBuilder) {
         randomDataForProfile = Stream
                 .generate(() -> RandomStringUtils.randomAlphabetic(10))
                 .limit(2).collect(Collectors.toList());
         profileBuilder.setEmail(randomDataForProfile.get(0));
         profileBuilder.setPassword(randomDataForProfile.get(1));
         profileBuilder.setName(null);
+    }
+
+    public void buildProfile(Builder profileBuilder, ProfileType profileType) throws IllegalArgumentException {
+        switch (profileType) {
+            case FULL:
+                buildFullProfile(profileBuilder);
+                break;
+            case WITHOUT_EMAIL:
+                buildProfileWithoutEmail(profileBuilder);
+                break;
+            case WITHOUT_PASSWORD:
+                buildProfileWithoutPassword(profileBuilder);
+                break;
+            case WITHOUT_NAME:
+                buildProfileWithoutName(profileBuilder);
+                break;
+            default:
+                throw new IllegalArgumentException("Wrong ProfileType was passed for build Profile");
+        }
     }
 }

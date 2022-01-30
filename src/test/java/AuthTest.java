@@ -6,24 +6,26 @@ import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import org.junit.Before;
 import org.junit.Test;
+import Profile.ProfileType;
 
 import static org.junit.Assert.*;
 
 public class AuthTest {
 
     private AuthClient authClient;
+    private ProfileDirector profileDirector;
+    private ProfileBuilder profileBuilder;
 
     @Before
     public void setUp() {
         authClient = new AuthClient();
+        profileDirector = new ProfileDirector();
+        profileBuilder = new ProfileBuilder();
     }
 
     @Test
-    public void authRegisterReturns200WithAccessTokenForNewProfile() {
-
-        ProfileDirector profileDirector = new ProfileDirector();
-        ProfileBuilder profileBuilder = new ProfileBuilder();
-        profileDirector.buildFullProfile(profileBuilder);
+    public void registerReturns200WithAccessTokenForNewProfile() {
+        profileDirector.buildProfile(profileBuilder, ProfileType.FULL);
         Profile profile = profileBuilder.getResult();
 
         Response registerResponse = authClient.registerProfileResponse(profile);
@@ -36,4 +38,5 @@ public class AuthTest {
         assertNotNull(authToken);
         assertNotNull(refreshToken);
     }
+
 }
