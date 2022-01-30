@@ -1,4 +1,4 @@
-package clients.Profile;
+package Profile;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package clients.Profile;
+package Profile;
 
 public class ProfileBuilder implements Builder {
     private String email;

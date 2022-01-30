@@ -1,4 +1,4 @@
-package clients.Profile;
+package Profile;
 
 public interface Builder {
     void setEmail(String email);

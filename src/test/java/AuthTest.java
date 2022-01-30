@@ -1,7 +1,7 @@
 import clients.AuthClient;
-import clients.Profile.Profile;
-import clients.Profile.ProfileBuilder;
-import clients.Profile.ProfileDirector;
+import Profile.Profile;
+import Profile.ProfileBuilder;
+import Profile.ProfileDirector;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import org.junit.Before;
