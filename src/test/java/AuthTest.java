@@ -8,7 +8,11 @@ import org.junit.Before;
 import org.junit.Test;
 import Profile.ProfileType;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.blankOrNullString;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertTrue;
 
 public class AuthTest {
 
@@ -24,19 +28,19 @@ public class AuthTest {
     }
 
     @Test
-    public void registerReturns200WithAccessTokenForNewProfile() {
+    public void registerNewProfileReturns200WithAccessAndRefreshTokens() {
         profileDirector.buildProfile(profileBuilder, ProfileType.FULL);
         Profile profile = profileBuilder.getResult();
 
         Response registerResponse = authClient.registerProfileResponse(profile);
         ValidatableResponse validatableResponse = registerResponse.then().assertThat().statusCode(200);
         Boolean isResponseSuccessful = validatableResponse.extract().path("success");
-        String authToken = validatableResponse.extract().path("accessToken");
-        String refreshToken = validatableResponse.extract().path("refreshToken");
+        String actualAuthToken = validatableResponse.extract().path("accessToken");
+        String actualRefreshToken = validatableResponse.extract().path("refreshToken");
 
         assertTrue(isResponseSuccessful);
-        assertNotNull(authToken);
-        assertNotNull(refreshToken);
+        assertThat("Auth token is null or blank string", actualAuthToken, is(not(blankOrNullString())));
+        assertThat("Refresh token is null or blank string", actualRefreshToken, is(not(blankOrNullString())));
     }
 
 }
