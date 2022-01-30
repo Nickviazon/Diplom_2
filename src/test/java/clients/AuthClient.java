@@ -4,6 +4,7 @@ import profile.Profile;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import profile.ProfileCredentials;
 
 public class AuthClient extends RestAssuredClient{
 
@@ -28,5 +29,10 @@ public class AuthClient extends RestAssuredClient{
         return getResponse(specification, requestType, requestPath, profile);
     }
 
-    
+    public Response updateProfileResponse(ProfileCredentials profileCredentials) {
+        RequestSpecification specification = getBaseSpec();
+        Method requestType = Method.PUT;
+        String requestPath = AUTH_PATH + "user";
+        return getResponse(specification, requestType, requestPath, profileCredentials);
+    }
 }
