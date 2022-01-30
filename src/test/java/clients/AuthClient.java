@@ -9,11 +9,6 @@ import profile.ProfileCredentials;
 public class AuthClient extends RestAssuredClient{
 
     private static final String AUTH_PATH = "api/auth/";
-    private String accessToken;
-
-    public String getAccessToken(Profile Profile) {
-        return accessToken;
-    }
 
     public Response registerProfileResponse(Profile profile) {
         RequestSpecification specification = getBaseSpec();
