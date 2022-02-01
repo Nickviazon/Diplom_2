@@ -13,7 +13,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.runners.Parameterized.*;
 
 @RunWith(Parameterized.class)
-public class ParametrizedRegisterFailedTest extends AuthTest {
+public class ParametrizedRegisterNegativeTest extends AuthTest {
 
     @Parameter
     public ProfileType profileType;

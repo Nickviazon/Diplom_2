@@ -14,7 +14,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.runners.Parameterized.*;
 
 @RunWith(Parameterized.class)
-public class ParameterizedUpdateFailedTest extends AuthTest {
+public class ParameterizedUpdatePositiveTest extends AuthTest {
 
     @Parameter
     public ProfileType profileType;
@@ -25,41 +25,53 @@ public class ParameterizedUpdateFailedTest extends AuthTest {
     @Parameter(2)
     public boolean expectedSuccessField;
 
-    @Parameter(3)
-    public String expectedMessage;
-
 
     @Parameters
     public static Object[][] setUp() {
-        return new Object[][]{
-                {FULL, 401, false, "You should be authorised"},
-                {WITHOUT_EMAIL, 401, false, "You should be authorised"},
-                {WITHOUT_PASSWORD, 401, false, "You should be authorised"},
-                {WITHOUT_NAME, 401, false, "You should be authorised"}
+        return new Object[][] {
+                {FULL, 200, true},
+                {WITHOUT_EMAIL, 200, true},
+                {WITHOUT_PASSWORD, 200, true},
+                {WITHOUT_NAME, 200, true}
         };
     }
 
     @Test
-    public void updateProfileWithoutAuthorizeReturns401WithMessage() {
+    public void updateAuthorizedProfileReturns200WithPassedData() {
         // Создаём данные для профиля
         profileDirector.buildProfile(profileBuilder, ProfileType.FULL);
         Profile profile = profileBuilder.getResult();
         ProfileCredentials oldProfileCredentials = ProfileCredentials.from(profile);
 
-        // Создаём новый профиль
+        // Создаём новый профиль и получаем accessToken
         ValidatableResponse createProfileResponse = authClient.registerProfileResponse(profile)
                 .then().assertThat().statusCode(200);
+        String accessToken = createProfileResponse.extract().path("accessToken");
 
         // Создаём новые данные для пользователя
         profileDirector.buildProfile(profileBuilder, profileType);
         Profile newProfileData = profileBuilder.getResult();
         ProfileCredentials newProfileCredentials = ProfileCredentials.from(newProfileData);
-        // Задаём пустой accessToken
-        String accessToken = null;
 
+        // Выполняем запрос и проверяем ответ
         Response updateProfileResponse = authClient.updateProfileResponse(newProfileCredentials, accessToken);
-        ValidatableResponse validatableResponse = updateProfileResponse.then().assertThat().statusCode(401);
-        validatableResponse.assertThat().body("message", equalTo(expectedMessage));
-    }
-}
+        ValidatableResponse validatableResponse = updateProfileResponse.then().assertThat().statusCode(expectedStatusCode);
+        validatableResponse.assertThat().body("success", is(expectedSuccessField));
 
+        if (profileType == WITHOUT_EMAIL) {
+            validatableResponse.assertThat().body("user.email", equalTo(oldProfileCredentials.email));
+       } else {
+           validatableResponse.assertThat().body("user.email", equalTo(newProfileCredentials.email));
+       }
+
+        if (profileType == WITHOUT_NAME) {
+            validatableResponse.assertThat().body("user.name", equalTo(oldProfileCredentials.name));
+        } else {
+            validatableResponse.assertThat().body("user.name", equalTo(newProfileCredentials.name));
+        }
+    }
+
+
+
+
+}

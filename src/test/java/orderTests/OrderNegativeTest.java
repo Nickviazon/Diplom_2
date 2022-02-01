@@ -16,7 +16,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.runners.Parameterized.*;
 
 @RunWith(Parameterized.class)
-public class ParameterizedFailedOrderTest {
+public class OrderNegativeTest {
 
     private static OrderClient orderClient;
 

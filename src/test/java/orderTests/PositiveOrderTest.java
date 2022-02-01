@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.blankOrNullString;
 import static org.junit.runners.Parameterized.*;
 
 @RunWith(Parameterized.class)
-public class ParameterizedSuccessfulOrderTest {
+public class PositiveOrderTest {
 
     private static OrderClient orderClient;
 
