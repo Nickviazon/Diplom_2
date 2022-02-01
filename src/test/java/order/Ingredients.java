@@ -17,7 +17,7 @@ public class Ingredients {
         return ingredients;
     }
 
-    public static List<String> getRandomIngredientsList() {
+    public static List<String> getRandomIngredients() {
         return Stream
                 .generate(() -> RandomStringUtils.randomAlphanumeric(24))
                 .limit(5).collect(Collectors.toList());

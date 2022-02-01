@@ -35,7 +35,7 @@ public class ParameterizedFailedOrderTest {
     @Parameters
     public static Object[][] setUpParameters() {
         orderClient = new OrderClient();
-        List<String> randomIngredientsHash = Ingredients.getRandomIngredientsList();
+        List<String> randomIngredientsHash = Ingredients.getRandomIngredients();
 
         return new Object[][] {
                 {emptyList(), 400, false, "Ingredient ids must be provided"}, // проверка если передали пустой список ингредиентов
