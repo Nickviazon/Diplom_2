@@ -1,4 +1,4 @@
-package AuthPathTests;
+package authPathTests;
 
 import profile.Profile;
 import io.restassured.response.Response;

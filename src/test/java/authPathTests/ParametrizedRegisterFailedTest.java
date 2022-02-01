@@ -1,7 +1,6 @@
-package AuthPathTests;
+package authPathTests;
 
 import profile.*;
-import clients.AuthClient;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import org.junit.Test;

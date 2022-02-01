@@ -1,4 +1,4 @@
-package AuthPathTests;
+package authPathTests;
 
 import profile.ProfileBuilder;
 import profile.ProfileDirector;

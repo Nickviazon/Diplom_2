@@ -1,4 +1,4 @@
-package AuthPathTests;
+package authPathTests;
 
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;

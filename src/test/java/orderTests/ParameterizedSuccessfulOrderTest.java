@@ -1,4 +1,4 @@
-package OrderTests;
+package orderTests;
 
 import clients.AuthClient;
 import clients.IngredientClient;

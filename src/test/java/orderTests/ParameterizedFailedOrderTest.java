@@ -1,4 +1,4 @@
-package OrderTests;
+package orderTests;
 
 import clients.OrderClient;
 import io.restassured.response.Response;
