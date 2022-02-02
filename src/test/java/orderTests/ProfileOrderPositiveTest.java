@@ -31,24 +31,20 @@ import static org.junit.Assert.assertEquals;
 public class ProfileOrderPositiveTest {
 
     private ProfileOrders profileOrders;
-    private AuthClient authClient;
-    private ProfileDirector profileDirector;
-    private ProfileBuilder profileBuilder;
     private OrderClient orderClient;
-    private Profile profile;
     private String accessToken;
     private List<String> allIngredients;
 
     @Before
     public void setUp() {
-        authClient = new AuthClient();
-        profileDirector = new ProfileDirector();
-        profileBuilder = new ProfileBuilder();
+        AuthClient authClient = new AuthClient();
+        ProfileDirector profileDirector = new ProfileDirector();
+        ProfileBuilder profileBuilder = new ProfileBuilder();
         orderClient = new OrderClient();
 
         // Создание, регистрация профиля. Получение токена профиля для авторизации
         profileDirector.buildProfile(profileBuilder, ProfileType.FULL);
-        profile = profileBuilder.getResult();
+        Profile profile = profileBuilder.getResult();
         accessToken = authClient.registerProfileResponse(profile).
                 then().assertThat().statusCode(200).
                 extract().path("accessToken");
