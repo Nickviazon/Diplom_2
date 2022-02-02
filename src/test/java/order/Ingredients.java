@@ -1,5 +1,6 @@
 package order;
 
+import io.qameta.allure.Step;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class Ingredients {
         return ingredients;
     }
 
+    @Step("Create ingredients list with random hash")
     public static List<String> getRandomIngredients() {
         return Stream
                 .generate(() -> RandomStringUtils.randomAlphanumeric(24))

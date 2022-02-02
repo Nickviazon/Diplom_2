@@ -1,5 +1,6 @@
 package authPathTests;
 
+import io.qameta.allure.Step;
 import profile.ProfileBuilder;
 import profile.ProfileDirector;
 import clients.AuthClient;
@@ -12,6 +13,7 @@ public abstract class AuthTest {
     protected static ProfileBuilder profileBuilder;
 
     @BeforeClass
+    @Step("Create clients")
     public static void setUpClientAndBuilders() {
         authClient = new AuthClient();
         profileDirector = new ProfileDirector();

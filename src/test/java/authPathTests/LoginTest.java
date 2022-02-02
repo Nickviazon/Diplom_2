@@ -1,5 +1,8 @@
 package authPathTests;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.Step;
+import io.qameta.allure.junit4.DisplayName;
 import profile.Profile;
 import profile.ProfileType;
 import io.restassured.response.Response;
@@ -13,9 +16,10 @@ import static org.hamcrest.Matchers.not;
 
 public class LoginTest extends AuthTest {
 
-    private Profile profile;
+    public Profile profile;
 
     @Before
+    @Step("Create profile")
     public void setUp() {
         // Создаём данные для профиля
         profileDirector.buildProfile(profileBuilder, ProfileType.FULL);
@@ -23,6 +27,8 @@ public class LoginTest extends AuthTest {
     }
 
     @Test
+    @DisplayName("Login an existed profile")
+    @Description("Login an existed profile returns 200 with access and refresh tokens")
     public void loginExistedProfileReturns200WithAccessAndRefreshTokens() {
         // Регистрируем профиль
         authClient.registerProfileResponse(profile).then().assertThat().statusCode(200);
@@ -37,6 +43,8 @@ public class LoginTest extends AuthTest {
     }
 
     @Test
+    @DisplayName("Login with wrong profile data")
+    @Description("Login with wrong profile data return 401 Unauthorized with message in the response body")
     public void loginWithWrongProfileReturns401WithMessage() {
         String expectedMessage = "email or password are incorrect";
 

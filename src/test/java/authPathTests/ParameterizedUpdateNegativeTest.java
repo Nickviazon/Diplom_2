@@ -29,7 +29,7 @@ public class ParameterizedUpdateNegativeTest extends AuthTest {
     public String expectedMessage;
 
 
-    @Parameters
+    @Parameters(name="Update unauthorized profile. Profile type = {0}")
     public static Object[][] setUp() {
         return new Object[][]{
                 {FULL, 401, false, "You should be authorised"},

@@ -1,5 +1,7 @@
 package authPathTests;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.junit4.DisplayName;
 import profile.Profile;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
@@ -13,6 +15,8 @@ import static org.hamcrest.Matchers.not;
 public class RegisterTest extends AuthTest {
 
     @Test
+    @DisplayName("Register a new profile")
+    @Description("Register a new profile returns 200 OK with access and refresh tokens")
     public void registerNewProfileReturns200WithAccessAndRefreshTokens() {
         profileDirector.buildProfile(profileBuilder, ProfileType.FULL);
         Profile profile = profileBuilder.getResult();
@@ -27,6 +31,8 @@ public class RegisterTest extends AuthTest {
     }
 
     @Test
+    @DisplayName("Register an existed profile")
+    @Description("Register an existed profile returns 403 with error the message in the response body")
     public void registerExistedProfileReturns403WithMessage() {
         profileDirector.buildProfile(profileBuilder, ProfileType.FULL);
         Profile firstProfile = profileBuilder.getResult();

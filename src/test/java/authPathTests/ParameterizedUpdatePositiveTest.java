@@ -26,7 +26,7 @@ public class ParameterizedUpdatePositiveTest extends AuthTest {
     public boolean expectedSuccessField;
 
 
-    @Parameters
+    @Parameters(name="Update authorized profile. Profile type = {0}")
     public static Object[][] setUp() {
         return new Object[][] {
                 {FULL, 200, true},

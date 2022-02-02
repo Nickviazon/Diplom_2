@@ -1,5 +1,6 @@
 package clients;
 
+import io.qameta.allure.Step;
 import profile.Profile;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
@@ -10,6 +11,7 @@ public class AuthClient extends RestAssuredClient{
 
     private static final String AUTH_PATH = "api/auth/";
 
+    @Step("Register new profile with email = {profile.email} and name = {profile.name}")
     public Response registerProfileResponse(Profile profile) {
         RequestSpecification specification = getBaseSpec();
         Method requestType = Method.POST;
@@ -17,6 +19,7 @@ public class AuthClient extends RestAssuredClient{
         return getResponse(specification, requestType, requestPath, profile);
     }
 
+    @Step("Profile with email = {profile.email} login")
     public Response loginProfileResponse(Profile profile) {
         RequestSpecification specification = getBaseSpec();
         Method requestType = Method.POST;
@@ -24,6 +27,7 @@ public class AuthClient extends RestAssuredClient{
         return getResponse(specification, requestType, requestPath, profile);
     }
 
+    @Step("Update profile")
     public Response updateProfileResponse(ProfileCredentials profileCredentials, String accessToken) {
         RequestSpecification specification = getBaseSpec();
         Method requestType = Method.PATCH;

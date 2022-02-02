@@ -1,5 +1,6 @@
 package profile;
 
+import io.qameta.allure.Step;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.List;
@@ -48,6 +49,7 @@ public class ProfileDirector {
         profileBuilder.setName(null);
     }
 
+    @Step("New {profileType} created")
     public void buildProfile(Builder profileBuilder, ProfileType profileType) throws IllegalArgumentException {
         switch (profileType) {
             case FULL:

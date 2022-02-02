@@ -3,6 +3,8 @@ package orderTests;
 import clients.AuthClient;
 import clients.IngredientClient;
 import clients.OrderClient;
+import io.qameta.allure.Flaky;
+import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import order.Ingredients;
@@ -30,12 +32,13 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Parameterized.class)
 public class ProfileOrderPositiveTest {
 
-    private ProfileOrders profileOrders;
-    private OrderClient orderClient;
-    private String accessToken;
-    private List<String> allIngredients;
+    public ProfileOrders profileOrders;
+    public OrderClient orderClient;
+    public String accessToken;
+    public List<String> allIngredients;
 
     @Before
+    @Step("Init clients, create and register profile, get all ingredients. create profileOrder")
     public void setUp() {
         AuthClient authClient = new AuthClient();
         ProfileDirector profileDirector = new ProfileDirector();
@@ -65,7 +68,7 @@ public class ProfileOrderPositiveTest {
     @Parameter(2)
     public boolean isResponseSuccessful;
 
-    @Parameters
+    @Parameters(name="Get orders of authorized profile returns code {1} with the first 50 orders: orders amount = {0}")
     public static Object[][] setUpParameters() {
         return new Object[][] {
                 {1, 200, true},
@@ -75,6 +78,7 @@ public class ProfileOrderPositiveTest {
         };
     }
 
+    @Flaky
     @Test
     public void getOrdersOfAuthorizedProfileReturns200WithFirst50Orders() {
         // Добавление заказов для профиля

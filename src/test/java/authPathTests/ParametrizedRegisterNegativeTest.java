@@ -27,7 +27,7 @@ public class ParametrizedRegisterNegativeTest extends AuthTest {
     @Parameter(3)
     public String expectedMessage;
 
-    @Parameters
+    @Parameters(name="Register profile {0} returns {1} with message in the response body")
     public static Object[][] setUpParameters() {
        return new Object[][] {
                {WITHOUT_EMAIL, 403, false, "Email, password and name are required fields"},

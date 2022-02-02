@@ -1,5 +1,6 @@
 package clients;
 
+import io.qameta.allure.Step;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
@@ -17,6 +18,7 @@ public class RestAssuredClient {
                 .build();
     }
 
+    @Step("Send {requestType} request")
     public static Response getResponse(
             RequestSpecification specification,
             Method requestType,

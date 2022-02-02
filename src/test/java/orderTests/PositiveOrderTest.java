@@ -34,7 +34,7 @@ public class PositiveOrderTest {
     @Parameter(2)
     public boolean isRequestSuccessful;
 
-    @Parameters
+    @Parameters(name="Create order with correct correct ingredients returns {1}")
     public static Object[][] setUpParameters() {
         AuthClient authClient = new AuthClient();
         ProfileDirector profileDirector = new ProfileDirector();
