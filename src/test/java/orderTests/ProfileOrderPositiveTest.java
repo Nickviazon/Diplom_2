@@ -80,7 +80,7 @@ public class ProfileOrderPositiveTest {
     }
 
     @Test
-    public void getOrdersOfAuthorizedProfile() {
+    public void getOrdersOfAuthorizedProfileReturns200WithFirst50Orders() {
         // Добавление заказов для профиля
         for (int i = 0; i < ordersAmount; i++) {
             int maxIngredientIndex = ThreadLocalRandom.current().nextInt(1, allIngredients.size());
