@@ -18,4 +18,9 @@ public class Order {
     public List<String> getIngredients() {
         return ingredients;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Order(number=%s, ingredients=%s)", number, ingredients);
+    }
 }

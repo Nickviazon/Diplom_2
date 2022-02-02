@@ -21,4 +21,9 @@ public class ProfileOrders {
     public void addOrder(Order order) {
         orders.add(order);
     }
+
+    @Override
+    public String toString() {
+        return String.format("ProfileOrders(profile=%s, orders=%s)", profile, orders);
+    }
 }

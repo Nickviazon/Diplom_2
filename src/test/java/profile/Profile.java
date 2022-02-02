@@ -11,4 +11,9 @@ public class Profile {
         this.password = password ;
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Profile(email=%s, name=%s)", email, name);
+    }
 }
