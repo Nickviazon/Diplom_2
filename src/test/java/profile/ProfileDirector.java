@@ -49,7 +49,7 @@ public class ProfileDirector {
         profileBuilder.setName(null);
     }
 
-    @Step("New {profileType} created")
+    @Step("New {profileType} profile created")
     public void buildProfile(Builder profileBuilder, ProfileType profileType) throws IllegalArgumentException {
         switch (profileType) {
             case FULL:
