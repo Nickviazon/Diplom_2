@@ -9,6 +9,8 @@ import profile.Profile;
 import profile.ProfileCredentials;
 import profile.ProfileType;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static profile.ProfileType.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.runners.Parameterized.*;
@@ -22,17 +24,14 @@ public class ParameterizedUpdatePositiveTest extends AuthTest {
     @Parameter(1)
     public int expectedStatusCode;
 
-    @Parameter(2)
-    public boolean expectedSuccessField;
-
 
     @Parameters(name="Update authorized profile. Profile type = {0}")
     public static Object[][] setUp() {
         return new Object[][] {
-                {FULL, 200, true},
-                {WITHOUT_EMAIL, 200, true},
-                {WITHOUT_PASSWORD, 200, true},
-                {WITHOUT_NAME, 200, true}
+                {FULL, 200},
+                {WITHOUT_EMAIL, 200},
+                {WITHOUT_PASSWORD, 200},
+                {WITHOUT_NAME, 200}
         };
     }
 
@@ -56,19 +55,16 @@ public class ParameterizedUpdatePositiveTest extends AuthTest {
         // Выполняем запрос и проверяем ответ
         Response updateProfileResponse = authClient.updateProfileResponse(newProfileCredentials, accessToken);
         ValidatableResponse validatableResponse = updateProfileResponse.then().assertThat().statusCode(expectedStatusCode);
-        validatableResponse.assertThat().body("success", is(expectedSuccessField));
+        assertTrue("Response is unsuccessful", validatableResponse.extract().path("success"));
 
-        if (profileType == WITHOUT_EMAIL) {
-            validatableResponse.assertThat().body("user.email", equalTo(oldProfileCredentials.email));
-       } else {
-           validatableResponse.assertThat().body("user.email", equalTo(newProfileCredentials.email));
-       }
+        String expectedUserEmail = profileType == WITHOUT_EMAIL ? oldProfileCredentials.email : newProfileCredentials.email;
+        String actualUserEmail = validatableResponse.extract().path("user.email");
+        assertThat("Updated user.email is different from expected", actualUserEmail, equalTo(expectedUserEmail));
 
-        if (profileType == WITHOUT_NAME) {
-            validatableResponse.assertThat().body("user.name", equalTo(oldProfileCredentials.name));
-        } else {
-            validatableResponse.assertThat().body("user.name", equalTo(newProfileCredentials.name));
-        }
+
+        String expectedUserName = profileType == WITHOUT_NAME ? oldProfileCredentials.name : newProfileCredentials.name;
+        String actualUserName = validatableResponse.extract().path("user.name");
+        assertThat("Actual user.name is different from expected", actualUserName, is(equalTo(expectedUserName)));
     }
 
 

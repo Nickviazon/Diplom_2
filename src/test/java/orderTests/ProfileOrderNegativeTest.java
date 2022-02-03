@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
 
 public class ProfileOrderNegativeTest {
 
@@ -21,7 +23,10 @@ public class ProfileOrderNegativeTest {
         Response getProfileOrdersResponse = new OrderClient().getProfileOrders(accessToken);
         ValidatableResponse validatableResponse = getProfileOrdersResponse.
                 then().assertThat().statusCode(401);
-        validatableResponse.assertThat().body("success", is(false));
-        validatableResponse.assertThat().body("message", equalTo("You should be authorised"));
+        assertFalse("Response must be unsuccessful", validatableResponse.extract().path("success"));
+
+        String expectedMessage = "You should be authorised";
+        String actualMessage = validatableResponse.extract().path("message");
+        assertThat("Actual message is different from expected", actualMessage, equalTo(expectedMessage));
     }
 }

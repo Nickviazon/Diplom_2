@@ -17,7 +17,10 @@ import profile.ProfileType;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.blankOrNullString;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertTrue;
 import static org.junit.runners.Parameterized.*;
 
 @RunWith(Parameterized.class)
@@ -30,9 +33,6 @@ public class PositiveOrderTest {
 
     @Parameter(1)
     public int responseCode;
-
-    @Parameter(2)
-    public boolean isRequestSuccessful;
 
     @Parameters(name="Create order with correct correct ingredients returns {1}")
     public static Object[][] setUpParameters() {
@@ -48,8 +48,8 @@ public class PositiveOrderTest {
                 .extract().path("accessToken");
 
         return new Object[][] {
-                {accessToken, 200, true},
-                {null, 200, true}
+                {accessToken, 200},
+                {null, 200}
         };
     }
 
@@ -60,8 +60,12 @@ public class PositiveOrderTest {
 
         Response orderCreationResponse = orderClient.createOrderResponse(ingredients, accessToken);
         ValidatableResponse validatableResponse = orderCreationResponse.then().assertThat().statusCode(responseCode);
-        validatableResponse.assertThat().body("success", is(true));
-        validatableResponse.assertThat().body("name", is(not(blankOrNullString())));
-        validatableResponse.assertThat().body("order.number", is(notNullValue()));
+        assertTrue("Response is unsuccessful", validatableResponse.extract().path("success"));
+
+        String orderName = validatableResponse.extract().path("name");
+        assertThat("Order name is wrong", orderName, is(not(blankOrNullString())));
+
+        Integer orderNumber = validatableResponse.extract().path("order.number");
+        assertThat("Order number is null", orderNumber, is(notNullValue()));
     }
 }

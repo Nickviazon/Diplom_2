@@ -12,7 +12,8 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
 
 public class OrderNegativeTest {
 
@@ -32,8 +33,11 @@ public class OrderNegativeTest {
 
         Response orderCreationResponse = orderClient.createOrderResponse(ingredients, accessToken);
         ValidatableResponse validatableResponse = orderCreationResponse.then().assertThat().statusCode(400);
-        validatableResponse.assertThat().body("success", is(false));
-        validatableResponse.assertThat().body("message", equalTo("Ingredient ids must be provided"));
+        assertFalse("Response must be unsuccessful", validatableResponse.extract().path("success"));
+
+        String expectedMessage = "Ingredient ids must be provided";
+        String actualMessage = validatableResponse.extract().path("message");
+        assertThat("Actual message is different from expected", actualMessage, equalTo(expectedMessage));
     }
 
     @Test

@@ -11,8 +11,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.blankOrNullString;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class LoginTest extends AuthTest {
 
@@ -35,22 +38,31 @@ public class LoginTest extends AuthTest {
 
         Response loginResponse = authClient.loginProfileResponse(profile);
         ValidatableResponse validatableResponse = loginResponse.then().assertThat().statusCode(200);
-        validatableResponse.assertThat().body("success", is(true));
-        validatableResponse.assertThat().body("accessToken", both(is(not(blankOrNullString()))).and(startsWith("Bearer ")));
-        validatableResponse.assertThat().body("refreshToken", is(not(blankOrNullString())));
-        validatableResponse.assertThat().body("user.email", is(equalTo(profile.email.toLowerCase())));
-        validatableResponse.assertThat().body("user.name", is(equalTo(profile.name)));
+        assertTrue("Response is unsuccessful", validatableResponse.extract().path("success"));
+
+        String accessToken = validatableResponse.extract().path("accessToken");
+        assertThat("AccessToken is wrong", accessToken, both(is(not(blankOrNullString()))).and(startsWith("Bearer ")));
+
+        String refreshToken = validatableResponse.extract().path("refreshToken");
+        assertThat("RefreshToken is wrong", accessToken, is(not(blankOrNullString())));
+
+        String userEmail = validatableResponse.extract().path("user.email");
+        assertThat("Actual user.email is different from expected", userEmail, is(equalTo(profile.email)));
+
+        String userName = validatableResponse.extract().path("user.name");
+        assertThat("Actual user.name is different from expected", userName, is(equalTo(profile.name)));
     }
 
     @Test
     @DisplayName("Login with wrong profile data")
     @Description("Login with wrong profile data return 401 Unauthorized with message in the response body")
     public void loginWithWrongProfileReturns401WithMessage() {
-        String expectedMessage = "email or password are incorrect";
-
         Response loginResponse = authClient.loginProfileResponse(profile);
         ValidatableResponse validatableResponse = loginResponse.then().assertThat().statusCode(401);
-        validatableResponse.assertThat().body("success", is(false));
-        validatableResponse.assertThat().body("message", equalTo(expectedMessage));
+        assertFalse("Response must be unsuccessful", validatableResponse.extract().path("success"));
+
+        String expectedMessage = "email or password are incorrect";
+        String actualMessage = validatableResponse.extract().path("message");
+        assertThat("Actual message is different from expected", actualMessage, equalTo(expectedMessage));
     }
 }

@@ -7,6 +7,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static profile.ProfileType.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -22,17 +25,14 @@ public class ParametrizedRegisterNegativeTest extends AuthTest {
     public int expectedResponseCode;
 
     @Parameter(2)
-    public boolean expectedSuccessField;
-
-    @Parameter(3)
     public String expectedMessage;
 
     @Parameters(name="Register profile {0} returns {1} with message in the response body")
     public static Object[][] setUpParameters() {
        return new Object[][] {
-               {WITHOUT_EMAIL, 403, false, "Email, password and name are required fields"},
-               {WITHOUT_PASSWORD, 403, false, "Email, password and name are required fields"},
-               {WITHOUT_NAME, 403, false, "Email, password and name are required fields"}
+               {WITHOUT_EMAIL, 403, "Email, password and name are required fields"},
+               {WITHOUT_PASSWORD, 403, "Email, password and name are required fields"},
+               {WITHOUT_NAME, 403, "Email, password and name are required fields"}
        };
     }
 
@@ -43,7 +43,9 @@ public class ParametrizedRegisterNegativeTest extends AuthTest {
 
         Response registerResponse = authClient.registerProfileResponse(profile);
         ValidatableResponse validatableResponse = registerResponse.then().assertThat().statusCode(expectedResponseCode);
-        validatableResponse.assertThat().body("success", is(false));
-        validatableResponse.assertThat().body("message", is(equalTo(expectedMessage)));
+        assertFalse("Response must be unsuccessful", validatableResponse.extract().path("success"));
+
+        String actualMessage = validatableResponse.extract().path("message");
+        assertThat("Actual message is different from expected", actualMessage, equalTo(expectedMessage));
     }
 }

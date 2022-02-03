@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.runners.Parameterized.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -60,21 +61,18 @@ public class ProfileOrderPositiveTest {
     }
 
     @Parameter
-    public int ordersAmount;
+    public int expectedOrdersAmount;
 
     @Parameter(1)
     public int expectedResponseCode;
 
-    @Parameter(2)
-    public boolean isResponseSuccessful;
-
     @Parameters(name="Get orders of authorized profile returns code {1} with the first 50 orders: orders amount = {0}")
     public static Object[][] setUpParameters() {
         return new Object[][] {
-                {1, 200, true},
-                {25, 200, true},
-                {50, 200, true},
-                {52, 200, true}
+                {1, 200},
+                {25, 200},
+                {50, 200},
+                {52, 200}
         };
     }
 
@@ -82,7 +80,7 @@ public class ProfileOrderPositiveTest {
     @Test
     public void getOrdersOfAuthorizedProfileReturns200WithFirst50Orders() {
         // Добавление заказов для профиля
-        for (int i = 0; i < ordersAmount; i++) {
+        for (int i = 0; i < expectedOrdersAmount; i++) {
             int maxIngredientIndex = ThreadLocalRandom.current().nextInt(1, allIngredients.size());
             Ingredients ingredients = new Ingredients(allIngredients.subList(0, maxIngredientIndex));
             orderClient.createOrder(profileOrders, ingredients, accessToken);
@@ -91,9 +89,9 @@ public class ProfileOrderPositiveTest {
         Response getProfileOrdersResponse = orderClient.getProfileOrders(accessToken);
         ValidatableResponse validatableResponse = getProfileOrdersResponse.
                 then().assertThat().statusCode(expectedResponseCode);
-        validatableResponse.assertThat().body("success", is(isResponseSuccessful));
+        assertTrue("Response is unsuccessful", validatableResponse.extract().path("success"));
 
-        List<Order> expectedOrders = ordersAmount < 50 ? profileOrders.getOrders() :
+        List<Order> expectedOrders = expectedOrdersAmount < 50 ? profileOrders.getOrders() :
                 profileOrders.getOrders().subList(0, 50);
         List<LinkedHashMap> actualOrders = validatableResponse.extract().path("orders");
 
@@ -105,14 +103,18 @@ public class ProfileOrderPositiveTest {
             Order expectedOrder = expectedOrders.get(i);
 
             Integer actualOrderNumber = (Integer)actualOrders.get(i).get("number");
-            assertEquals(expectedOrder.getNumber(), actualOrderNumber);
+            assertEquals("Actual order number is different from expected", expectedOrder.getNumber(), actualOrderNumber);
 
             List<String> actualOrderIngredients = (List<String>)actualOrders.get(i).get("ingredients");
-            assertEquals(expectedOrder.getIngredients(), actualOrderIngredients);
+            assertEquals("Actual order ingredients is different from expected", expectedOrder.getIngredients(), actualOrderIngredients);
         }
 
-        validatableResponse.assertThat().body("total", equalTo(ordersAmount));
-        validatableResponse.assertThat().body("totalToday", equalTo(ordersAmount));
+        int actualOrdersAmount = validatableResponse.extract().path("total");
+        assertEquals("Actual orders amount is different from expected", actualOrdersAmount, expectedOrdersAmount);
+
+
+        int actualOrdersAmountToday = validatableResponse.extract().path("totalToday");
+        assertEquals("Actual orders amount today is different from expected", actualOrdersAmountToday, expectedOrdersAmount);
 
     }
 }

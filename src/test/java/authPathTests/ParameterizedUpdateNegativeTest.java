@@ -9,6 +9,7 @@ import profile.Profile;
 import profile.ProfileCredentials;
 import profile.ProfileType;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static profile.ProfileType.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.runners.Parameterized.*;
@@ -58,8 +59,10 @@ public class ParameterizedUpdateNegativeTest extends AuthTest {
         String accessToken = null;
 
         Response updateProfileResponse = authClient.updateProfileResponse(newProfileCredentials, accessToken);
-        ValidatableResponse validatableResponse = updateProfileResponse.then().assertThat().statusCode(401);
-        validatableResponse.assertThat().body("message", equalTo(expectedMessage));
+        ValidatableResponse validatableResponse = updateProfileResponse.then().assertThat().statusCode(expectedStatusCode);
+
+        String actualMessage = validatableResponse.extract().path("message");
+        assertThat("Actual message is different from expected", actualMessage, equalTo(expectedMessage));
     }
 }
 
