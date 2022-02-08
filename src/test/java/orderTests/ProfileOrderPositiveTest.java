@@ -26,8 +26,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.runners.Parameterized.*;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
@@ -42,13 +40,10 @@ public class ProfileOrderPositiveTest {
     @Step("Init clients, create and register profile, get all ingredients. create profileOrder")
     public void setUp() {
         AuthClient authClient = new AuthClient();
-        ProfileDirector profileDirector = new ProfileDirector();
-        ProfileBuilder profileBuilder = new ProfileBuilder();
         orderClient = new OrderClient();
 
         // Создание, регистрация профиля. Получение токена профиля для авторизации
-        profileDirector.buildProfile(profileBuilder, ProfileType.FULL);
-        Profile profile = profileBuilder.getResult();
+        Profile profile = createNewProfile();
         accessToken = authClient.registerProfileResponse(profile).
                 then().assertThat().statusCode(200).
                 extract().path("accessToken");
@@ -63,16 +58,13 @@ public class ProfileOrderPositiveTest {
     @Parameter
     public int expectedOrdersAmount;
 
-    @Parameter(1)
-    public int expectedResponseCode;
-
-    @Parameters(name="Get orders of authorized profile returns code {1} with the first 50 orders: orders amount = {0}")
+    @Parameters(name="Get orders of authorized profile returns code 200 with the first 50 orders: orders amount = {0}")
     public static Object[][] setUpParameters() {
         return new Object[][] {
-                {1, 200},
-                {25, 200},
-                {50, 200},
-                {52, 200}
+                {1},
+                {25},
+                {50},
+                {52}
         };
     }
 
@@ -80,25 +72,52 @@ public class ProfileOrderPositiveTest {
     @Test
     public void getOrdersOfAuthorizedProfileReturns200WithFirst50Orders() {
         // Добавление заказов для профиля
-        for (int i = 0; i < expectedOrdersAmount; i++) {
-            int maxIngredientIndex = ThreadLocalRandom.current().nextInt(1, allIngredients.size());
-            Ingredients ingredients = new Ingredients(allIngredients.subList(0, maxIngredientIndex));
-            orderClient.createOrder(profileOrders, ingredients, accessToken);
-        }
+        fillProfileWithOrders(expectedOrdersAmount);
 
-        Response getProfileOrdersResponse = orderClient.getProfileOrders(accessToken);
-        ValidatableResponse validatableResponse = getProfileOrdersResponse.
-                then().assertThat().statusCode(expectedResponseCode);
+        ValidatableResponse validatableResponse = getProfileOrders(accessToken);
         assertTrue("Response is unsuccessful", validatableResponse.extract().path("success"));
 
-        List<Order> expectedOrders = expectedOrdersAmount < 50 ? profileOrders.getOrders() :
-                profileOrders.getOrders().subList(0, 50);
+        List<Order> expectedOrders = getExpectedOrders();
         List<LinkedHashMap> actualOrders = validatableResponse.extract().path("orders");
 
         // Проверка что ожидаемое количество заказов и полученное количество заказов равно
         assertEquals("Size of expected orders list and actual orders list is different",
                 expectedOrders.size(), actualOrders.size());
 
+        // Проверка полученных заказов
+        checkOrders(expectedOrders, actualOrders);
+
+        int actualOrdersAmount = validatableResponse.extract().path("total");
+        assertEquals("Actual orders amount is different from expected", actualOrdersAmount, expectedOrdersAmount);
+
+        int actualOrdersAmountToday = validatableResponse.extract().path("totalToday");
+        assertEquals("Actual orders amount today is different from expected", actualOrdersAmountToday, expectedOrdersAmount);
+    }
+
+    private ValidatableResponse getProfileOrders( String accessToken) {
+        return orderClient.getProfileOrders(accessToken).then().assertThat().statusCode(200);
+    }
+
+    private Profile createNewProfile() {
+        ProfileDirector profileDirector = new ProfileDirector();
+        ProfileBuilder profileBuilder = new ProfileBuilder();
+        profileDirector.buildProfile(profileBuilder, ProfileType.FULL);
+        return profileBuilder.getResult();
+    }
+
+    private void fillProfileWithOrders(int expectedOrdersAmount) {
+        for (int i = 0; i < expectedOrdersAmount; i++) {
+            int maxIngredientIndex = ThreadLocalRandom.current().nextInt(1, allIngredients.size());
+            Ingredients ingredients = new Ingredients(allIngredients.subList(0, maxIngredientIndex));
+            orderClient.createOrder(profileOrders, ingredients, accessToken);
+        }
+    }
+
+    private List<Order> getExpectedOrders() {
+        return (expectedOrdersAmount < 50) ? profileOrders.getOrders() : profileOrders.getOrders().subList(0, 50);
+    }
+
+    private void checkOrders(List<Order> expectedOrders, List<LinkedHashMap>actualOrders) {
         for (int i = 0; i < actualOrders.size(); i++) {
             Order expectedOrder = expectedOrders.get(i);
 
@@ -108,13 +127,6 @@ public class ProfileOrderPositiveTest {
             List<String> actualOrderIngredients = (List<String>)actualOrders.get(i).get("ingredients");
             assertEquals("Actual order ingredients is different from expected", expectedOrder.getIngredients(), actualOrderIngredients);
         }
-
-        int actualOrdersAmount = validatableResponse.extract().path("total");
-        assertEquals("Actual orders amount is different from expected", actualOrdersAmount, expectedOrdersAmount);
-
-
-        int actualOrdersAmountToday = validatableResponse.extract().path("totalToday");
-        assertEquals("Actual orders amount today is different from expected", actualOrdersAmountToday, expectedOrdersAmount);
-
     }
+
 }
